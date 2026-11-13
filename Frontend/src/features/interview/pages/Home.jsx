@@ -2,16 +2,31 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useInterview } from "../hooks/useInterview";
+import { useAuth } from "../../auth/hooks/useAuth";
 import "../style/home.scss";
 
 const Home = () => {
     const navigate = useNavigate();
     const { generateReport, loading } = useInterview();
+    const { handleLogout } = useAuth();
+    const [loggingOut, setLoggingOut] = useState(false);
 
     const [resumeFile, setResumeFile] = useState(null);
     const [jobDescription, setJobDescription] = useState("");
     const [selfDescription, setSelfDescription] = useState("");
     const [error, setError] = useState("");
+
+    const onLogout = async () => {
+        setLoggingOut(true);
+        const success = await handleLogout();
+        setLoggingOut(false);
+
+        if (success) {
+            navigate("/login", { replace: true });
+        } else {
+            setError("Logout failed. Please try again.");
+        }
+    };
 
     const handleResumeChange = (e) => {
         const file = e.target.files?.[0];

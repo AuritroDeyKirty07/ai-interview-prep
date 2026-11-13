@@ -121,20 +121,35 @@ async function loginUserController(req, res) {
 }
 
 
-async function logoutUserController(req,res){
-    const token= req.cookies.token
+async function logoutUserController(req, res) {
+    try {
+        const token = req.cookies?.token;
 
-    if(token){
-        await tokenBlackListModel.create({token})
+        if (token) {
+            await tokenBlackListModel.updateOne(
+                { token },
+                { $setOnInsert: { token } },
+                { upsert: true }
+            );
+        }
+
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            path: "/"
+        });
+
+        return res.status(200).json({
+            message: "User logged out successfully"
+        });
+    } catch (error) {
+        console.error("[AUTH] Logout error:", error);
+        return res.status(500).json({
+            message: "Could not complete logout"
+        });
     }
-    res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-});
-    res.status(200).json({message: "User logged out successfully"})
 }
-
 
 
 /**
