@@ -1,0 +1,120 @@
+
+/* Shared app navigation using the original dark / pink theme */
+.app-header {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    width: 100%;
+    min-height: 72px;
+    align-items: center;
+    gap: 30px;
+    padding: 0 max(24px, calc((100vw - 1120px) / 2));
+    border-bottom: 1px solid #2a3348;
+    background: #161b22;
+    color: #e6edf3;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+}
+
+.app-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #e6edf3;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.app-brand__mark {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 9px;
+    background: #ff2d78;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.app-header__nav {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+}
+
+.app-header__nav a {
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: #9aa4b2;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: color .15s ease, background .15s ease;
+}
+
+.app-header__nav a:hover,
+.app-header__nav a.is-active {
+    background: rgba(255, 45, 120, .12);
+    color: #ff5a94;
+}
+
+.app-header__user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.app-header__greeting {
+    color: #9aa4b2;
+    font-size: 13px;
+}
+
+.app-header__logout {
+    padding: 9px 13px;
+    border: 1px solid #394456;
+    border-radius: 8px;
+    background: #1c2230;
+    color: #e6edf3;
+    font: 650 12px system-ui, sans-serif;
+    cursor: pointer;
+}
+
+.app-header__logout:hover {
+    border-color: #ff2d78;
+    color: #ff5a94;
+}
+
+.app-header__logout:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.app-header__error {
+    position: absolute;
+    top: 58px;
+    right: 24px;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 77, 77, .3);
+    border-radius: 8px;
+    background: #26191e;
+    color: #ff8a8a;
+    font-size: 12px;
+}
+
+@media (max-width: 640px) {
+    .app-header {
+        min-height: 64px;
+        flex-wrap: wrap;
+        gap: 10px 12px;
+        padding: 10px 16px;
+    }
+
+    .app-brand { flex: 1; }
+    .app-header__nav { order: 3; width: 100%; }
+    .app-header__user { gap: 8px; }
+    .app-header__greeting { display: none; }
+}

@@ -5,6 +5,7 @@
     justify-content: center;
     align-items: center;
     padding: 2rem;
+    background: #0d1117;
     
     .interview-container {
         width: 100%;
@@ -121,3 +122,5 @@
         margin-top: auto;
     }
 }
+.new-interview-page { min-height: 100vh; background: #f6f7fb; }
+.new-interview-page .home { min-height: calc(100vh - 72px); }

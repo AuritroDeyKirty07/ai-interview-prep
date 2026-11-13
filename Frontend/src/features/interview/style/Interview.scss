@@ -478,3 +478,6 @@ $severity-low: #3fb950;
         border-color: rgba($severity-low, 0.25);
     }
 }
+/* Shared application navigation */
+.interview-page { min-height: 100vh; }
+.interview-page > .app-header { width: 100%; box-sizing: border-box; }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../style/Interview.scss'
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate, useParams } from 'react-router'
-import { useAuth } from '../../auth/hooks/useAuth'
+import AppHeader from '../components/AppHeader'
 
 
 
@@ -61,17 +61,6 @@ const Interview = () => {
     const [ activeNav, setActiveNav ] = useState('technical')
     const { report, getReportById, loading, getResumePdf } = useInterview()
     const { interviewId } = useParams()
-    const navigate = useNavigate()
-    const { handleLogout } = useAuth()
-    const [loggingOut, setLoggingOut] = useState(false)
-
-    const onLogout = async () => {
-        setLoggingOut(true)
-        const success = await handleLogout()
-        setLoggingOut(false)
-        if (success) navigate('/login', { replace: true })
-        else window.alert('Logout failed. Please try again.')
-    }
 
     useEffect(() => {
         if (interviewId) {
@@ -96,6 +85,7 @@ const Interview = () => {
 
     return (
         <div className='interview-page'>
+            <AppHeader active='dashboard' />
             <div className='interview-layout'>
 
                 {/* ── Left Nav ── */}

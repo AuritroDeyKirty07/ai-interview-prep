@@ -54,7 +54,7 @@ export const useAuth = () => {
     }
   };
 
-  // LOGOUT
+
   const handleLogout = async () => {
     setLoading(true);
 
