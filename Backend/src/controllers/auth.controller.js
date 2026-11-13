@@ -5,6 +5,14 @@ const tokenBlackListModel = require ("../models/blacklist.model.js")
 const authUser = require ('../middleware/auth.middleware.js')
 
 
+const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 24 * 60 * 60 * 1000,
+};
+
+
 /**
 * @name registerUserController
 * @route POST /api/auth/register
@@ -45,7 +53,7 @@ async function registerUserController(req,res) {
         {expiresIn:"1d"}
     )
 
-    res.cookie("token", token)
+    res.cookie("token", token, cookieOptions)
     res.status(201).json({
         message:"user registered succesfully",
         user:{
@@ -104,7 +112,11 @@ async function logoutUserController(req,res){
     if(token){
         await tokenBlackListModel.create({token})
     }
-    res.clearCookie("token")
+    res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
     res.status(200).json({message: "User logged out successfully"})
 }
 

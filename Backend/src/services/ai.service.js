@@ -52,13 +52,40 @@ async function generateInterviewReport(sampleInterviewReport){
       "preparationPlan": [{"day": <number>, "focus": "<string>", "tasks": ["<string>"]}]
     }`;
 
-    const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash-lite',
-        contents: prompt,
-        config: {
-            responseMimeType: 'application/json'
+
+const sleep = (ms) =>
+    new Promise(resolve => setTimeout(resolve, ms));
+
+async function generateWithRetry(ai, params, maxRetries = 3) {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await ai.models.generateContent(params);
+        } catch (error) {
+            const status = error.status || error.code;
+
+            const retryable = [429, 500, 502, 503, 504].includes(
+                Number(status)
+            );
+
+            if (!retryable || attempt === maxRetries) {
+                throw error;
+            }
+
+            const delay = 1000 * Math.pow(2, attempt);
+
+            console.log(
+                `Gemini API temporary error. Retrying in ${delay}ms...`
+            );
+
+            await sleep(delay);
         }
-    });
+    }
+}
+
+    const response = await generateWithRetry(ai, {
+    model: "gemini-3.6-flash",
+    contents: prompt
+});
 
     const report = JSON.parse(response.text);
     // console.log(JSON.stringify(report, null, 2));
