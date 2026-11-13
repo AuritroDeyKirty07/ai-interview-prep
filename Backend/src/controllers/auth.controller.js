@@ -70,39 +70,54 @@ async function registerUserController(req,res) {
  * @access Public
  */
 
-async function loginUserController(req,res){
-    const {email, password} =req.body
-    const user = await userModel.findOne({email})
+async function loginUserController(req, res) {
+    try {
+        const { email, password } = req.body;
 
-    if(!user){
-        return res.status(401).json({
-            message:"Invalid email or password"
-        })
-    }
+        const user = await userModel.findOne({ email });
 
-    const isPasswordValid =await bcrypt.compare(password, user.password)
-
-    if(!isPasswordValid){
-        return res.status(400).json({
-            message:"Invalid email or password"
-        })
-    }
-
-    const token = jwt.sign(
-        {id:user._id, username:user.username},
-        process.env.JWT_SECRET,
-        {expiresIn:"1d"}
-    )
-
-    res.cookie("token", token)
-    res.status(200).json({
-        message: "User logged in successfully",
-        user:{
-            id:user._id,
-            username:user.username,
-            email:user.email
+        if (!user) {
+            return res.status(401).json({
+                message: "Invalid email or password"
+            });
         }
-    })
+
+        const isPasswordValid = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                message: "Invalid email or password"
+            });
+        }
+
+        const token = jwt.sign(
+            { id: user._id, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        // Important: use cookieOptions here too
+        res.cookie("token", token, cookieOptions);
+
+        return res.status(200).json({
+            message: "User logged in successfully",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        console.error("Login Error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
 }
 
 
